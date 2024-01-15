@@ -1,2 +1,13 @@
 ---
-# vars file for ansible-kopia
+# vars file for kopia
+kopia_port: 51515
+kopia_control_username: control
+
+kopia_apt_repo: deb http://packages.kopia.io/apt/ stable main
+kopia_gpg_key: https://kopia.io/signing-key
+kopia_path: /mnt/backups
+
+kopia_user_uid: 1000
+kopia_group_gid: 1000
+
+kopia_clients: []

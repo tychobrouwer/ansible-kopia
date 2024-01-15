@@ -1,0 +1,16 @@
+---
+- name: Converge
+  hosts: all
+
+  roles:
+    - role: ansible-kopia
+      kopia_control_password: password123
+      kopia_repository_password: password123
+      kopia_path: /mnt/backups
+      kopia_clients:
+        - username: tychob
+          hostname: desktop-tycho
+          password: password123
+        - username: tychob
+          hostname: nobara-laptop
+          password: password123
