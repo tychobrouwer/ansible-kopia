@@ -35,9 +35,9 @@ Example Playbook
             password: password123
 
       roles:
-         - { role: kopia, kopia_server_control_password: password123, kopia_repository_password: password123,
+         - { role: tychobrouwer.kopia, kopia_server_control_password: password123, kopia_repository_password: password123,
              kopia_path: /mnt/backups }
-         - { role: kopia, kopia_server_control_password: password123, kopia_repository_password: password123,
+         - { role: tychobrouwer.kopia, kopia_server_control_password: password123, kopia_repository_password: password123,
              kopia_path: /mnt/backups, kopia_port: 51515, kopia_control_username: control, kopia_user_uid: 1000,
              kopia_user_gid: 1000 }
 
