@@ -23,8 +23,8 @@
 
 - name: Install Kopia
   ansible.builtin.package:
-    name:
-      - kopia
+    name: kopia
+    update_cache: true
     state: present
 
 - name: Add Kopia repository
