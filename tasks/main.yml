@@ -28,23 +28,45 @@
     state: present
 
 - name: Add Kopia repository
-  ansible.builtin.command: kopia repository create filesystem --path={{ kopia_path }} --owner-gid={{ kopia_group_gid }} --owner-uid={{ kopia_user_uid }} --password={{ kopia_repository_password }}
+  ansible.builtin.command: >
+    kopia repository create filesystem
+    --path={{ kopia_path }}
+    --owner-gid={{ kopia_group_gid }}
+    --owner-uid={{ kopia_user_uid }}
+    --password={{ kopia_repository_password }}
   register: kopia_create_repository
   changed_when: "'found existing data in storage location' not in kopia_create_repository.stderr"
-  failed_when: "kopia_create_repository.rc != 0 and 'found existing data in storage location' not in kopia_create_repository.stderr"
+  failed_when: >
+    kopia_create_repository.rc != 0 and
+    'found existing data in storage location' not in kopia_create_repository.stderr
 
 - name: Add Kopia server users
-  ansible.builtin.command: kopia server user add {{ item.username }}@{{ item.hostname }} --user-password={{ item.password }}
+  ansible.builtin.command: >
+    kopia server user add
+    {{ item.username }}@{{ item.hostname }}
+    --user-password={{ item.password }}
   with_items: "{{ kopia_clients }}"
   register: kopia_add_user
   changed_when: "'already exists' not in kopia_add_user.stderr"
-  failed_when: "kopia_add_user.rc != 0 and 'already exists' not in kopia_add_user.stderr"
+  failed_when: kopia_add_user.rc != 0 and 'already exists' not in kopia_add_user.stderr
 
 - name: Start server with TLS Certificate generation for first time
-  ansible.builtin.command: timeout 5 kopia server start --tls-generate-cert --tls-cert-file=/root/kopia.cert --tls-key-file=/root/kopia.key --address="0.0.0.0:{{ kopia_port }}" --server-control-username={{ kopia_control_username }} --server-control-password={{ kopia_control_password }}
+  ansible.builtin.command: >
+    timeout 5 kopia server start
+    --tls-generate-cert
+    --tls-cert-file=/root/kopia.cert
+    --tls-key-file=/root/kopia.key
+    --address="0.0.0.0:{{ kopia_port }}"
+    --server-control-username={{ kopia_control_username }}
+    --server-control-password={{ kopia_control_password }}
   register: kopia_start_server
-  changed_when: "'already exists' not in kopia_start_server.stderr and 'address already in use' not in kopia_start_server.stderr"
-  failed_when: "kopia_start_server.rc != 124 and 'already exists' not in kopia_start_server.stderr and 'address already in use' not in kopia_start_server.stderr"
+  changed_when: >
+    'already exists' not in kopia_start_server.stderr and
+    'address already in use' not in kopia_start_server.stderr
+  failed_when: >
+    kopia_start_server.rc != 124 and
+    'already exists' not in kopia_start_server.stderr and
+    'address already in use' not in kopia_start_server.stderr
 
 - name: Create Kopia create service
   ansible.builtin.template:
@@ -60,8 +82,9 @@
 
 - name: Get Kopia server certificate
   ansible.builtin.shell: >
-    openssl x509 -noout -fingerprint -sha256 -inform pem -in /root/kopia.cert | 
-    tr -d : | 
+    set -o pipefail &&
+    openssl x509 -noout -fingerprint -sha256 -inform pem -in /root/kopia.cert |
+    tr -d : |
     sed 's/^sha256 Fingerprint=//' | tr '[:upper:]' '[:lower:]'
   register: kopia_server_cert
   changed_when: false
