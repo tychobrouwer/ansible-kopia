@@ -6,7 +6,19 @@ Install and configure a kopia server for my server
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+The ```kopia_server_control_password``` has to be set to the password used for the server control user.
+
+The ```kopia_repository_password``` has to be set to the password used for the repository.
+
+The ```kopia_path``` has to be set to the path where the Kopia repository will be stored.
+
+The ```kopia_clients``` variable is a list of clients that will be backed up, in the format shown below.
+
+```kopia_port``` can be set to the port used by the Kopia server.
+
+```kopia_control_username``` can be set to the control user for the server
+
+The ```kopia_user_uid``` and ```kopia_user_gid``` can be set to the uid and gid used by Kopia to set the owner of the repository.
 
 Example Playbook
 ----------------
@@ -25,6 +37,10 @@ Example Playbook
       roles:
          - { role: kopia, kopia_server_control_password: password123, kopia_repository_password: password123,
              kopia_path: /mnt/backups }
+         - { role: kopia, kopia_server_control_password: password123, kopia_repository_password: password123,
+             kopia_path: /mnt/backups, kopia_port: 51515, kopia_control_username: control, kopia_user_uid: 1000,
+             kopia_user_gid: 1000 }
+
 ```
 
 License
