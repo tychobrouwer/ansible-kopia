@@ -7,7 +7,7 @@ kopia_path: /mnt/backups
 kopia_apt_repo: deb http://packages.kopia.io/apt/ stable main
 kopia_gpg_key: https://kopia.io/signing-key
 
-kopia_user_uid: 1000
-kopia_group_gid: 1000
+kopia_user_uid: 0
+kopia_group_gid: 0
 
 kopia_clients: []
