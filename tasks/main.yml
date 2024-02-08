@@ -86,6 +86,7 @@
     openssl x509 -noout -fingerprint -sha256 -inform pem -in /root/kopia.cert |
     tr -d : |
     sed 's/^sha256 Fingerprint=//' | tr '[:upper:]' '[:lower:]'
+  executable: /bin/bash
   register: kopia_server_cert
   changed_when: false
 
