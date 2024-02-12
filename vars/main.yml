@@ -9,5 +9,3 @@ kopia_gpg_key: https://kopia.io/signing-key
 
 kopia_user_uid: 0
 kopia_group_gid: 0
-
-kopia_clients: []
