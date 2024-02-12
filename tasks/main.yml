@@ -39,6 +39,7 @@
   failed_when: >
     kopia_create_repository.rc != 0 and
     'found existing data in storage location' not in kopia_create_repository.stderr
+  notify: Restart kopia
 
 - name: Add Kopia server users
   ansible.builtin.command: >
@@ -49,6 +50,7 @@
   register: kopia_add_user
   changed_when: "'already exists' not in kopia_add_user.stderr"
   failed_when: kopia_add_user.rc != 0 and 'already exists' not in kopia_add_user.stderr
+  notify: Restart kopia
 
 - name: Start server with TLS Certificate generation for first time
   ansible.builtin.command: >
@@ -67,12 +69,14 @@
     kopia_start_server.rc != 124 and
     'already exists' not in kopia_start_server.stderr and
     'address already in use' not in kopia_start_server.stderr
+  notify: Restart kopia
 
 - name: Create Kopia create service
   ansible.builtin.template:
     src: ./kopia.service.j2
     dest: /etc/systemd/system/kopia.service
     mode: "0755"
+  notify: Restart kopia
 
 - name: Ensure Kopia service is started and enabled
   ansible.builtin.service:

@@ -1,0 +1,6 @@
+---
+# handlers file for kopia
+- name: Restart kopia
+  ansible.builtin.service:
+    name: kopia
+    state: restarted
