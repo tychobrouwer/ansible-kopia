@@ -47,7 +47,8 @@
     --path={{ kopia_path }}
     --password={{ kopia_repository_password }}
   register: kopia_connect_repository
-  changed_when: "'already connected' not in kopia_connect_repository.stderr"
+  changed_when: false
+  failed_when: 'Connected to repository' not in kopia_connect_repository.stderr
   notify: Restart kopia
 
 - name: Add Kopia server users
