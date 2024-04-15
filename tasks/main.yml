@@ -41,6 +41,15 @@
     'found existing data in storage location' not in kopia_create_repository.stderr
   notify: Restart kopia
 
+- name: Connect to Kopia repository
+  ansible.builtin.command: >
+    kopia repository connect filesystem
+    --path={{ kopia_path }}
+    --password={{ kopia_repository_password }}
+  register: kopia_connect_repository
+  changed_when: "'already connected' not in kopia_connect_repository.stderr"
+  notify: Restart kopia
+
 - name: Add Kopia server users
   ansible.builtin.command: >
     kopia server user add
