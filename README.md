@@ -24,23 +24,28 @@ Example Playbook
 ----------------
 
 ```yaml
-    - hosts: servers
-      vars:
-        kopia_clients:
-          - username: tychob
-            hostname: desktop-tycho
-            password: password123
-          - username: tychob
-            hostname: nobara-laptop
-            password: password123
+- hosts: servers
+  vars:
+    kopia_server_control_password: password123
+    kopia_repository_password: password123
+    kopia_path: /mnt/backups
 
-      roles:
-         - { role: tychobrouwer.kopia, kopia_server_control_password: password123, kopia_repository_password: password123,
-             kopia_path: /mnt/backups }
-         - { role: tychobrouwer.kopia, kopia_server_control_password: password123, kopia_repository_password: password123,
-             kopia_path: /mnt/backups, kopia_port: 51515, kopia_control_username: control, kopia_user_uid: 0,
-             kopia_user_gid: 0 }
+    kopia_clients:
+      - username: tychob
+        hostname: desktop-tycho
+        password: password123
+      - username: tychob
+        hostname: nobara-laptop
+        password: password123
 
+  roles:
+    - role: tychobrouwer.kopia
+
+    - role: tychobrouwer.kopia
+      kopia_port: 51515
+      kopia_control_username: control
+      kopia_user_uid: 0
+      kopia_user_gid: 0
 ```
 
 License
