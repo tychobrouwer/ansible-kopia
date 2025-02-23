@@ -1,6 +1,7 @@
 ---
 # handlers file for kopia
 - name: Restart kopia
-  ansible.builtin.service:
+  ansible.builtin.systemd:
     name: kopia
     state: restarted
+    daemon_reload: true

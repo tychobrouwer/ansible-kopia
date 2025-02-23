@@ -4,7 +4,7 @@ kopia_port: 51515
 kopia_control_username: control
 kopia_path: /mnt/backups
 
-kopia_apt_repo: deb http://packages.kopia.io/apt/ stable main
+kopia_apt_repo: http://packages.kopia.io/apt/
 kopia_gpg_key: https://kopia.io/signing-key
 
 kopia_user_uid: 0

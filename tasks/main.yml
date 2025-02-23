@@ -6,9 +6,11 @@
     cache_valid_time: 3600
   when: ansible_os_family == 'Debian'
 
-- name: Install gnupg
+- name: Ensure required packages are installed
   ansible.builtin.package:
-    name: gnupg
+    name:
+      - gnupg
+      - apt-transport-https
     state: present
 
 - name: Ensure Kopia signing key is installed
@@ -18,7 +20,7 @@
 
 - name: Ensure Kopia repository is in sources list
   ansible.builtin.apt_repository:
-    repo: "{{ kopia_apt_repo }}"
+    repo: "deb {{ kopia_apt_repo }} stable main"
     state: present
 
 - name: Install Kopia
@@ -27,7 +29,7 @@
     update_cache: true
     state: present
 
-- name: Add Kopia repository
+- name: Create Kopia repository
   ansible.builtin.command: >
     kopia repository create filesystem
     --path={{ kopia_path }}
@@ -61,7 +63,7 @@
   failed_when: kopia_add_user.rc != 0 and 'already exists' not in kopia_add_user.stderr
   notify: Restart kopia
 
-- name: Start server with TLS Certificate generation for first time
+- name: Start Kopia server with TLS certificate generation
   ansible.builtin.command: >
     timeout 5 kopia server start
     --tls-generate-cert
@@ -80,7 +82,7 @@
     'address already in use' not in kopia_start_server.stderr
   notify: Restart kopia
 
-- name: Create Kopia create service
+- name: Create Kopia service
   ansible.builtin.template:
     src: ./kopia.service.j2
     dest: /etc/systemd/system/kopia.service
@@ -88,7 +90,7 @@
   notify: Restart kopia
 
 - name: Ensure Kopia service is started and enabled
-  ansible.builtin.service:
+  ansible.builtin.systemd:
     name: kopia
     state: started
     enabled: true
